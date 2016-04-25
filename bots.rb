@@ -208,3 +208,4 @@ class CloneBot < Ebooks::Bot
   end
 end
 
+CloneBot.new('bots/pooh.yml')
