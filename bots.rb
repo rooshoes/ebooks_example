@@ -29,10 +29,11 @@ class CloneBot < Ebooks::Bot
   def on_startup
     load_model!
 
-    scheduler.cron '0 0 * * *' do
-      # Each day at midnight, post a single tweet
-      tweet(model.make_statement)
+    def scheduler.on_error(job, error)
+      msg = "Scheduler intercepted error in job #{job.id}: #{error.message}"
+      alert_owner(msg)
     end
+    set_schedule( @config['twitter']['frequency'] || '25m' )
   end
 
   def on_message(dm)
@@ -112,6 +113,15 @@ class CloneBot < Ebooks::Bot
     else
       log "Not following @#{user.screen_name}"
     end
+  end
+
+  def set_schedule(interval)
+    @schedule.unschedule if @schedule
+    @schedule = scheduler.every interval.to_s, :job => true do
+      # Every interval [String], post a single tweet
+      tweet(model.make_statement)
+    end
+    alert_owner "Now tweeting every #{@schedule.original}."
   end
 
   private
