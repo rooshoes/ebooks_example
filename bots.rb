@@ -19,8 +19,6 @@ class CloneBot < Ebooks::Bot
 
   def configure
     # Configuration for all CloneBots
-    self.consumer_key = ""
-    self.consumer_secret = ""
     self.delay_range = 1..6
     @userinfo = {}
   end
