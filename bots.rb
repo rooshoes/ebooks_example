@@ -39,8 +39,13 @@ class CloneBot < Ebooks::Bot
   end
 
   def on_message(dm)
-    delay do
-      reply(dm, model.make_response(dm.text))
+    is_command = dm.sender.screen_name == @owner && dm.text.start_with?('!')
+    if is_command 
+      run_command(dm.text[1..-1])
+    else
+      delay do
+         reply(dm, model.make_response(dm.text))
+      end
     end
   end
 
@@ -157,6 +162,39 @@ class CloneBot < Ebooks::Bot
       tweet(model.make_statement)
     end
     alert_owner "Now tweeting every #{@schedule.original}."
+  end
+
+  def run_command(command)
+    log "Running command: #{command}"
+    case command
+      when /^pause/i
+        @schedule.pause
+        alert_owner "Tweeting has been paused."
+      when /^resume/i
+        @schedule.resume
+        alert_owner "Tweeting has been resumed."
+      when /^force/i
+        @schedule.call
+        alert_owner "I tweeted!"
+      when /^every ([^ ]+)/i
+        set_schedule($1)
+      when /^next/i
+        alert_owner("Next tweet is scheduled for:", @schedule.next_time)
+      when /^count/i
+        alert_owner("Scheduler has tweeted", @schedule.count, "times.")
+      when /^uptime/i
+        alert_owner(scheduler.uptime_s, "since", scheduler.started_at)
+      when /^top 20/i
+        alert_owner(top20)
+      when /^top 100/i
+        alert_owner(top100)
+      when /^delete/i
+        delete_tweet( $'.scan(/last|\d+/i).map{ |id| id.upcase == "LAST" ? last_tweet.id : id } )
+      when /^block/i
+        block_user( $'.scan(/[^ ]+/) )
+      else 
+        alert_owner "Unrecognized command: #{command}"
+    end
   end
 
   private
