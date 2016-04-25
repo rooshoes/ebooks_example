@@ -15,10 +15,12 @@ class UserInfo
 end
 
 class CloneBot < Ebooks::Bot
-  attr_accessor :original, :model, :model_path
+  attr_accessor :owner, :model, :model_path, :schedule
 
   def configure
     # Configuration for all CloneBots
+    self.owner = @config['twitter']['owner']
+    self.blacklist = Array(@config['twitter']['blacklist'])
     self.delay_range = 1..6
     @userinfo = {}
   end
@@ -92,10 +94,10 @@ class CloneBot < Ebooks::Bot
     userinfo(username).pesters_left > 0
   end
 
-  # Only follow our original user or people who are following our original user
-  # @param user [Twitter::User]
+  # Only follow our owner or people who are following our owner
+  # @param user [Twitter::User] 
   def can_follow?(username)
-    @original.nil? || username == @original || twitter.friendship?(username, @original)
+    @config['twitter']['follows?'] == 'all' || @owner.nil? || username == @owner || twitter.friendship?(username, @owner)
   end
 
   def favorite(tweet)
@@ -128,7 +130,7 @@ class CloneBot < Ebooks::Bot
   def load_model!
     return if @model
 
-    @model_path ||= "model/#{original}.model"
+    @model_path ||= "model/#{@config['model']}.model"
 
     log "Loading model #{model_path}"
     @model = Ebooks::Model.load(model_path)
