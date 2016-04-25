@@ -174,8 +174,8 @@ class CloneBot < Ebooks::Bot
         @schedule.resume
         alert_owner "Tweeting has been resumed."
       when /^force/i
-        @schedule.call
-        alert_owner "I tweeted!"
+        tweet = twitter.update(model.make_statement)
+        alert_owner "I tweeted! #{tweet.url}"
       when /^every ([^ ]+)/i
         set_schedule($1)
       when /^next/i
