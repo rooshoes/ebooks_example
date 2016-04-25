@@ -123,6 +123,10 @@ class CloneBot < Ebooks::Bot
     twitter.create_direct_message(@owner, msg) unless @owner.nil?
   end
 
+  def last_tweet
+    twitter.user_timeline(username, count: 1, exclude_replies: true)[0]
+  end
+
   def block_user(users)
     return if users.empty?
     begin
