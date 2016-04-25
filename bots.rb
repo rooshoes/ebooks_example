@@ -117,6 +117,12 @@ class CloneBot < Ebooks::Bot
     end
   end
 
+  def alert_owner(*args)
+    msg = args.map(&:to_s).join(' ')
+    log "Alert:", msg
+    twitter.create_direct_message(@owner, msg) unless @owner.nil?
+  end
+
   def set_schedule(interval)
     @schedule.unschedule if @schedule
     @schedule = scheduler.every interval.to_s, :job => true do
