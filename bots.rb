@@ -135,6 +135,17 @@ class CloneBot < Ebooks::Bot
     end
   end
 
+  def delete_tweet(tweets)
+    return if tweets.empty?
+    begin
+      twitter.destroy_tweet(tweets)
+    rescue Twitter::Error => e
+      alert_owner "Error: #{e.message}"
+    else
+      alert_owner "Deleted tweet(s) #{tweets.join(', ')}."
+    end
+  end
+
   def set_schedule(interval)
     @schedule.unschedule if @schedule
     @schedule = scheduler.every interval.to_s, :job => true do
