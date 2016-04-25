@@ -5,15 +5,15 @@ As requested, this is the [twitter_ebooks](https://github.com/mispy/twitter_eboo
 ## Usage
 
 ```bash
-git clone https://github.com/mispy/ebooks_example.git
+git clone https://github.com/rooshoes/ebooks_example.git
 cd ebooks_example
 bundle install
-ebooks archive username corpus/username.json
-ebooks consume corpus/username.json
+bundle exec ebooks archive username corpus/username.json
+bundle exec ebooks consume corpus/username.json
 ```
 
 Populate bots.rb with your auth details, the bot username and model name, then:
 
-`ebooks start`
+`bundle exec ebooks start`
 
 Also runs as a Heroku app! See the [twitter_ebooks](https://github.com/mispy/twitter_ebooks) README for more information.
