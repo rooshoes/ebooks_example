@@ -123,6 +123,18 @@ class CloneBot < Ebooks::Bot
     twitter.create_direct_message(@owner, msg) unless @owner.nil?
   end
 
+  def block_user(users)
+    return if users.empty?
+    begin
+      twitter.block(users)
+    rescue Twitter::Error => e
+      alert_owner "Error: #{e.message}"
+    else
+      self.blacklist.push(users)
+      alert_owner "Blocked user(s) #{users.join(', ')}."
+    end
+  end
+
   def set_schedule(interval)
     @schedule.unschedule if @schedule
     @schedule = scheduler.every interval.to_s, :job => true do
