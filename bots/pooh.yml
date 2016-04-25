@@ -1,0 +1,10 @@
+model: "pooh"              # name of model file without .model extension
+twitter:
+  username: "pooh_ebooks"  # twitter username of ebooks bot account without @ symbol
+  owner: ""                # twitter username of the bot's owner without @ symbol
+  consumer key: ""         # your application's consumer key
+  consumer secret: ""      # your application's consumer secret
+  access token: ""         # the access token generated when you authorized your app to your ebooks account
+  access token secret: ""  # the access token secret generated when you authorized your app to your ebooks account
+  # follows?: no           # optional flag to disable following. setting this to 'all' will cause your bot to follow everyone that follows it.
+  # frequency: 5m          # optional configuration for frequency of tweets
